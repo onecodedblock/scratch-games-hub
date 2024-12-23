@@ -5,34 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scratch Game Hub</title>
     <style>
+        :root {
+            --bg-light: #f0f8ff;
+            --bg-dark: #1e293b;
+            --text-light: #1e293b;
+            --text-dark: #f8f9fa;
+            --accent-light: #38bdf8;
+            --accent-dark: #0ea5e9;
+            --card-bg-light: #ffffff;
+            --card-bg-dark: #334155;
+            --card-border-light: #d1d5db;
+            --card-border-dark: #475569;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background: #f4f4f9;
-            color: #333;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
         }
         header {
-            background: #6200ea;
-            color: white;
+            background: var(--accent-light);
+            color: var(--text-light);
             padding: 1rem;
             text-align: center;
+            transition: background 0.3s;
+        }
+        body.dark-mode header {
+            background: var(--accent-dark);
+            color: var(--text-dark);
         }
         nav {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            background: #3700b3;
+            background: var(--accent-light);
             padding: 0.5rem;
+            transition: background 0.3s;
+        }
+        body.dark-mode nav {
+            background: var(--accent-dark);
         }
         nav a {
-            color: white;
+            color: var(--text-light);
             text-decoration: none;
             padding: 0.5rem 1rem;
             border-radius: 5px;
         }
         nav a:hover {
-            background: #6200ea;
+            background: var(--accent-dark);
+            color: var(--text-dark);
         }
         main {
             padding: 1rem;
@@ -44,41 +72,79 @@
             justify-content: center;
         }
         .game {
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background: var(--card-bg-light);
+            border: 1px solid var(--card-border-light);
+            border-radius: 8px;
             padding: 1rem;
             width: 300px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, border 0.3s;
+        }
+        body.dark-mode .game {
+            background: var(--card-bg-dark);
+            border: 1px solid var(--card-border-dark);
         }
         .game iframe {
             width: 100%;
             height: 200px;
             border: none;
         }
-        .upload-form {
+        .upload-form, .profile {
             max-width: 400px;
             margin: 1rem auto;
             padding: 1rem;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background: var(--card-bg-light);
+            border: 1px solid var(--card-border-light);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, border 0.3s;
+        }
+        body.dark-mode .upload-form, body.dark-mode .profile {
+            background: var(--card-bg-dark);
+            border: 1px solid var(--card-border-dark);
         }
         .upload-form input, .upload-form button {
             width: 100%;
             margin-bottom: 1rem;
             padding: 0.5rem;
-            border: 1px solid #ccc;
+            border: 1px solid var(--card-border-light);
             border-radius: 5px;
+            transition: border 0.3s;
+        }
+        body.dark-mode .upload-form input, body.dark-mode .upload-form button {
+            border: 1px solid var(--card-border-dark);
         }
         footer {
             text-align: center;
             padding: 1rem;
-            background: #6200ea;
-            color: white;
+            background: var(--accent-light);
+            color: var(--text-light);
+            transition: background 0.3s;
+        }
+        body.dark-mode footer {
+            background: var(--accent-dark);
+            color: var(--text-dark);
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--accent-light);
+            color: var(--text-light);
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark-mode .theme-toggle {
+            background: var(--accent-dark);
+            color: var(--text-dark);
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
     <header>
         <h1>Scratch Game Hub</h1>
     </header>
@@ -86,6 +152,7 @@
         <a href="#games">Games</a>
         <a href="#upload">Upload Game</a>
         <a href="#login">Login</a>
+        <a href="#profiles">Profiles</a>
     </nav>
     <main>
         <section id="games">
@@ -126,9 +193,23 @@
                 </form>
             </div>
         </section>
+        <section id="profiles">
+            <h2>User Profiles</h2>
+            <div class="profile">
+                <h3>Username</h3>
+                <p><strong>User ID:</strong> 12345</p>
+                <p><strong>Description:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </section>
     </main>
     <footer>
         <p>&copy; 2024 Scratch Game Hub</p>
     </footer>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
 </body>
 </html>
