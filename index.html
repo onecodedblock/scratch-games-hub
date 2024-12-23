@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scratch Game Hub</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        /* Same styles as before */
         :root {
             --bg-light: #f0f8ff;
             --bg-dark: #1e293b;
@@ -86,11 +84,6 @@
             background: var(--card-bg-dark);
             border: 1px solid var(--card-border-dark);
         }
-        .game iframe {
-            width: 100%;
-            height: 200px;
-            border: none;
-        }
         .upload-form, .profile {
             max-width: 400px;
             margin: 1rem auto;
@@ -160,29 +153,32 @@
     <main>
         <section id="games">
             <h2>Featured Games</h2>
-            <div class="game-container" id="gameList">
-                <!-- The games will be dynamically added here -->
+            <div class="game-container">
+                <!-- Example game display with new approach -->
+                <div class="game">
+                    <h3>Game Title</h3>
+                    <button onclick="openGameInNewWindow('10128407')">Play Game</button>
+                </div>
             </div>
         </section>
         <section id="upload">
             <h2>Upload Your Game</h2>
             <div class="upload-form">
-                <form id="uploadForm" onsubmit="handleUpload(event)">
+                <form>
                     <label for="game-title">Game Title:</label>
                     <input type="text" id="game-title" name="game-title" required>
 
-                    <label for="scratch-url">Scratch Project ID:</label>
-                    <input type="text" id="scratch-url" name="scratch-url" placeholder="Enter Scratch Project ID" required>
+                    <label for="scratch-url">Scratch Project URL:</label>
+                    <input type="url" id="scratch-url" name="scratch-url" placeholder="https://scratch.mit.edu/projects/..." required>
 
                     <button type="submit">Upload Game</button>
                 </form>
-                <p id="uploadMessage"></p>
             </div>
         </section>
         <section id="login">
             <h2>Login</h2>
             <div class="upload-form">
-                <form id="loginForm" onsubmit="login(event)">
+                <form>
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username" required>
 
@@ -191,13 +187,12 @@
 
                     <button type="submit">Login</button>
                 </form>
-                <p id="loginMessage"></p>
             </div>
         </section>
         <section id="signup">
             <h2>Sign Up</h2>
             <div class="upload-form">
-                <form id="signupForm" onsubmit="signup(event)">
+                <form>
                     <label for="new-username">Username:</label>
                     <input type="text" id="new-username" name="new-username" required>
 
@@ -209,13 +204,14 @@
 
                     <button type="submit">Sign Up</button>
                 </form>
-                <p id="signupMessage"></p>
             </div>
         </section>
         <section id="profiles">
             <h2>User Profiles</h2>
-            <div class="profile" id="userProfile">
-                <!-- User profile details will show up here after login -->
+            <div class="profile">
+                <h3>Username</h3>
+                <p><strong>User ID:</strong> 12345</p>
+                <p><strong>Description:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
         </section>
     </main>
@@ -228,74 +224,23 @@
             document.body.classList.toggle('dark-mode');
         }
 
-        // Simulated login
-        function login(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        function openGameInNewWindow(scratchId) {
+            // Open a new about:blank window
+            const newWindow = window.open('about:blank', '_blank');
+            
+            // Create the iframe with the Scratch project embed URL
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://scratch.mit.edu/projects/${scratchId}/embed`;
+            iframe.width = '485';
+            iframe.height = '402';
+            iframe.frameBorder = '0';
+            iframe.scrolling = 'no';
+            iframe.allowTransparency = 'true';
+            iframe.allowFullscreen = 'true';
 
-            if (username && password) {
-                localStorage.setItem('loggedInUser', username);
-                document.getElementById('loginMessage').innerText = `Welcome, ${username}! You are now logged in.`;
-                document.getElementById('loginForm').reset();
-                showUserProfile(username);
-            }
+            // Append the iframe to the new window's document body
+            newWindow.document.body.appendChild(iframe);
         }
-
-        // Simulated sign-up
-        function signup(event) {
-            event.preventDefault();
-            const newUsername = document.getElementById('new-username').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-
-            if (newPassword === confirmPassword) {
-                localStorage.setItem('loggedInUser', newUsername);
-                document.getElementById('signupMessage').innerText = `Account created! Welcome, ${newUsername}.`;
-                document.getElementById('signupForm').reset();
-                showUserProfile(newUsername);
-            } else {
-                document.getElementById('signupMessage').innerText = "Passwords do not match!";
-            }
-        }
-
-        // Show the user's profile
-        function showUserProfile(username) {
-            const profileDiv = document.getElementById('userProfile');
-            profileDiv.innerHTML = `<h3>Logged in as: ${username}</h3>`;
-        }
-
-        // Handle game upload
-        function handleUpload(event) {
-            event.preventDefault();
-            const gameTitle = document.getElementById('game-title').value;
-            const scratchId = document.getElementById('scratch-url').value;
-            const uploadMessage = document.getElementById('uploadMessage');
-
-            if (gameTitle && scratchId) {
-                const embedCode = `<iframe src="https://scratch.mit.edu/projects/${scratchId}/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>`;
-                uploadMessage.innerText = `Game "${gameTitle}" has been uploaded successfully!`;
-                
-                // Add the new game to the game list
-                const gameContainer = document.getElementById('gameList');
-                const newGame = document.createElement('div');
-                newGame.classList.add('game');
-                newGame.innerHTML = `<h3>${gameTitle}</h3>${embedCode}`;
-                gameContainer.appendChild(newGame);
-
-                console.log('Game uploaded:', { gameTitle, scratchId });
-            } else {
-                uploadMessage.innerText = 'Please fill out all fields.';
-            }
-        }
-
-        // Check if a user is logged in on page load
-        window.onload = function () {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                showUserProfile(loggedInUser);
-            }
-        };
     </script>
 </body>
 </html>
