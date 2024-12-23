@@ -160,12 +160,8 @@
     <main>
         <section id="games">
             <h2>Featured Games</h2>
-            <div class="game-container">
-                <!-- Example embedded game -->
-                <div class="game">
-                    <h3>Game Title</h3>
-                    <iframe src="https://scratch.mit.edu/projects/embed/123456789"></iframe>
-                </div>
+            <div class="game-container" id="gameList">
+                <!-- The games will be dynamically added here -->
             </div>
         </section>
         <section id="upload">
@@ -175,8 +171,8 @@
                     <label for="game-title">Game Title:</label>
                     <input type="text" id="game-title" name="game-title" required>
 
-                    <label for="scratch-url">Scratch Project URL:</label>
-                    <input type="url" id="scratch-url" name="scratch-url" placeholder="https://scratch.mit.edu/projects/..." required>
+                    <label for="scratch-url">Scratch Project ID:</label>
+                    <input type="text" id="scratch-url" name="scratch-url" placeholder="Enter Scratch Project ID" required>
 
                     <button type="submit">Upload Game</button>
                 </form>
@@ -273,12 +269,21 @@
         function handleUpload(event) {
             event.preventDefault();
             const gameTitle = document.getElementById('game-title').value;
-            const scratchUrl = document.getElementById('scratch-url').value;
+            const scratchId = document.getElementById('scratch-url').value;
             const uploadMessage = document.getElementById('uploadMessage');
 
-            if (gameTitle && scratchUrl) {
+            if (gameTitle && scratchId) {
+                const embedCode = `<iframe src="https://scratch.mit.edu/projects/${scratchId}/embed" allowtransparency="true" width="485" height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>`;
                 uploadMessage.innerText = `Game "${gameTitle}" has been uploaded successfully!`;
-                console.log('Game uploaded:', { gameTitle, scratchUrl });
+                
+                // Add the new game to the game list
+                const gameContainer = document.getElementById('gameList');
+                const newGame = document.createElement('div');
+                newGame.classList.add('game');
+                newGame.innerHTML = `<h3>${gameTitle}</h3>${embedCode}`;
+                gameContainer.appendChild(newGame);
+
+                console.log('Game uploaded:', { gameTitle, scratchId });
             } else {
                 uploadMessage.innerText = 'Please fill out all fields.';
             }
